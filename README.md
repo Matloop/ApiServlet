@@ -89,3 +89,33 @@ Após o deploy e inicialização bem-sucedidos, a API estará disponível nos se
 **Observação sobre a URL:** A URL base contém `/api/api/` porque:
 1. O primeiro `/api` é o *context path* da sua aplicação web, derivado do nome do arquivo `api.war`.
 2. O segundo `/api/contatos` é o padrão de URL (`url-pattern`) definido na anotação `@WebServlet` do seu `ContatoServlet.java`.
+
+## Troubleshooting Comum
+
+### Erro: Porta 8005 já em Uso (java.net.BindException)
+
+Ao iniciar o Tomcat com `catalina.bat run` ou `./catalina.sh run`, você pode encontrar um erro indicando que a porta `8005` já está em uso (`Address already in use`). Esta é a porta padrão que o Tomcat usa para receber o comando de desligamento (shutdown).
+
+**Causa:** Outro processo no seu computador (frequentemente uma instância anterior do Tomcat que não foi parada corretamente, ou às vezes o processo "System" do Windows) está ocupando essa porta.
+
+**Solução: Alterar a Porta de Shutdown do Tomcat**
+
+1.  **Pare o Tomcat** se ele estiver tentando rodar.
+2.  Navegue até a pasta `conf/` dentro do diretório de instalação do Tomcat (ex: `C:\Caminho\Para\apache-tomcat-10.1.x\conf`).
+3.  Abra o arquivo `server.xml` em um editor de texto.
+4.  Perto do início do arquivo, localize a tag `<Server>`:
+    ```xml
+    <Server port="8005" shutdown="SHUTDOWN">
+        <!-- ... outros atributos e tags ... -->
+    </Server>
+    ```
+5.  Altere o valor do atributo `port` de `8005` para uma porta diferente que esteja livre, por exemplo, `8006`:
+    ```xml
+    <Server port="8006" shutdown="SHUTDOWN">
+        <!-- ... outros atributos e tags ... -->
+    </Server>
+    ```
+6.  **Salve** as alterações no arquivo `server.xml`.
+7.  **Reinicie o Tomcat** usando o método normal (`catalina.bat run` ou `./catalina.sh run`).
+
+Agora o Tomcat usará a porta `8006` (ou a que você escolheu) para o comando de shutdown, evitando o conflito. Note que os scripts `shutdown.bat` / `./shutdown.sh` também usarão essa nova porta para parar o servidor.
