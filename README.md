@@ -20,7 +20,7 @@ Esta seção descreve como executar a API backend feita em Java puro com Servlet
 2.  Execute o Maven Wrapper para limpar o projeto anterior e empacotar a aplicação:
     *   **Windows (CMD/PowerShell):**
         ```bash
-        mvnw.cmd clean package
+        .\mvnw.cmd clean package
         ```
     *   **Linux / macOS:**
         ```bash
